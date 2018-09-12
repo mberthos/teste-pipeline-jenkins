@@ -1,4 +1,5 @@
-node {
+pipeline{
+ node {
    echo "Building Job at ${workspace}"
    //Create parameters
    if (params.create){
@@ -99,3 +100,4 @@ post {
             echo 'For example, if the Pipeline was previously failing but is now successful'
         }
     }         
+}
