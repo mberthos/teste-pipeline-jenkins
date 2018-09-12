@@ -1,5 +1,5 @@
 pipeline{
- node {
+
    echo "Building Job at ${workspace}"
    //Create parameters
    if (params.create){
@@ -80,7 +80,6 @@ pipeline{
         build 'pipeline-local' 
       }
    }       
-}
 
 post {
         always {
