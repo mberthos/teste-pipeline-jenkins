@@ -7,10 +7,6 @@ node {
                 name: 'Nodes',
                 choices:"Linux\nMac",
                 description: "Choose Node!")
-             choice(
-                name: 'Nodes',
-                choices:"Linux\nMac",
-                description: "Choose Node!")
             choice(
                 name: 'Versions',
                 choices:"3.4\n4.4",
