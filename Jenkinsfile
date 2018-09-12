@@ -1,14 +1,26 @@
 node {
+   def workspace = pwd()
+   echo "Building Job at ${workspace}"
+   
+   stage('Shell') {
+        try {
+            sh returnStdout: true, script: 'demo.sh'
+        }
+        catch (exc) {
+            echo 'Something failed!'
+        }
+    }
+   
    //parameters
    parameters {
-         booleanParam(defaultValue: true, description: '', name: 'userFlag')
+         //booleanParam(defaultValue: true, description: '', name: 'userFlag')
          string(defaultValue: "TEST", description: 'What environment?', name: 'userFlag')
          choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
    }
    
    stage("TESTPARAMETER") {
        echo "flag: ${params.userFlag}"
-       echo "region: echo ${params.region}"
+       echo "region: ${params.region}"
    }
    
    //Stages
@@ -45,6 +57,7 @@ node {
    }
    
    stage ('CALL JOB'){
+        //build(job: 'jenkins-test-project-build', param1 : 'some-value')
         build 'pipeline-local' 
     }
 }
