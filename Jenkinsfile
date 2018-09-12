@@ -1,17 +1,17 @@
 node {
+   //parameters
+   parameters {
+         booleanParam(defaultValue: true, description: '', name: 'userFlag')
+   }
+   
+   //Stages
    stage ('CLEAN'){
           echo 'Hello World'
           sh "df -kh"      
    }
    
-   parameters {
-         booleanParam(defaultValue: true, description: '', name: 'userFlag')
-   }
-
    stage("TESTPARAMETER") {
-       steps {
               echo "flag: ${params.userFlag}"
-       }
    }
    
    stage ('UPDATE ENVIROMENT'){
