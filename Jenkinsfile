@@ -4,7 +4,17 @@ node {
           sh "df -kh"      
    }
    
-    stage ('UPDATE ENVIROMENT'){
+   parameters {
+         booleanParam(defaultValue: true, description: '', name: 'userFlag')
+   }
+
+   stage("TESTPARAMETER") {
+       steps {
+              echo "flag: ${params.userFlag}"
+       }
+   }
+   
+   stage ('UPDATE ENVIROMENT'){
          sh "sudo mkdir -p ${WORKSPACE}//repo"
          sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
