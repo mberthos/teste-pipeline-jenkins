@@ -1,8 +1,13 @@
 node {
    echo "Building Job at ${workspace}"
    //Create parameters
-   parameters {
+   if (params.create){
+     parameters {
             choice(
+                name: 'Nodes',
+                choices:"Linux\nMac",
+                description: "Choose Node!")
+             choice(
                 name: 'Nodes',
                 choices:"Linux\nMac",
                 description: "Choose Node!")
@@ -14,7 +19,8 @@ node {
                 name: 'Path',
                 defaultValue:"/home/pencillr/builds/",
                 description: "Where to put the build!")
-    }
+      }
+   }  
        
    //Escape error job
    stage('Shell') {
@@ -71,8 +77,10 @@ node {
          archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'   
    }
    
-   stage ('CALL JOB'){
+   if(params.calljob){  
+     stage ('CALL JOB'){
         //build(job: 'jenkins-test-project-build', param1 : 'some-value')
         build 'pipeline-local' 
-    }
+      }
+   }  
 }
