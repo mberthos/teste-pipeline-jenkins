@@ -78,9 +78,10 @@ node {
         //build(job: 'jenkins-test-project-build', param1 : 'some-value')
         build 'pipeline-local' 
       }
-   } 
-   
-   post {
+   }       
+}
+
+post {
         always {
             echo 'This will always run'
         }
@@ -98,4 +99,3 @@ node {
             echo 'For example, if the Pipeline was previously failing but is now successful'
         }
     }         
-}
