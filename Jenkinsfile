@@ -1,7 +1,8 @@
 node {
-   def workspace = pwd()
+   //def workspace = pwd()
    echo "Building Job at ${workspace}"
    
+   //Escape error job
    stage('Shell') {
         try {
             sh returnStdout: true, script: 'demo.sh'
