@@ -5,7 +5,7 @@ node {
    stage 'CHECKOUT PROJECT'
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'da5a2d11-fa80-4e5b-8add-a69c704c3b13', url: 'https://github.com/mberthos/teste-pipeline-jenkins.git']]])   
    
-   timeout(time: 5, unit: 'SECONDS') {
+   timeout(time: 60, unit: 'SECONDS') {
          withEnv(["BRANCH=${params.BRANCH}"]) {
                stage "CREATE BUILD OUTPUT"
                    sh "echo $BRANCH"
