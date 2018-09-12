@@ -5,10 +5,8 @@ node {
    }
    
    stage ('UPDATE ENVIROMENT'){
-      steps{
          sh "sudo sh "mkdir -p ${WORKSPACE}//repo"
          sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
-      }
    }
    
    
