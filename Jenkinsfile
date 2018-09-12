@@ -4,12 +4,6 @@ node {
           sh "df -kh"      
    }
    
-   stage ('UPDATE ENVIROMENT'){
-         sh "sudo sh "mkdir -p ${WORKSPACE}//repo"
-         sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
-   }
-   
-   
    stage ('CHECKOUT PROJECT'){
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'da5a2d11-fa80-4e5b-8add-a69c704c3b13', url: 'https://github.com/mberthos/teste-pipeline-jenkins.git']]])   
    }
