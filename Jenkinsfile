@@ -2,7 +2,7 @@ pipeline{
   agent any
   stages {  
 
-     stage('Create Parameters){  
+     stage('Create Parameters'){  
         //Create parameters
         if (params.create){
            parameters {
