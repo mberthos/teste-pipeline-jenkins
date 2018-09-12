@@ -2,6 +2,13 @@ node {
    //parameters
    parameters {
          booleanParam(defaultValue: true, description: '', name: 'userFlag')
+         string(defaultValue: "TEST", description: 'What environment?', name: 'userFlag')
+         choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
+   }
+   
+   stage("TESTPARAMETER") {
+       echo "flag: ${params.userFlag}"
+      echo "echo ${params.region}"
    }
    
    //Stages
@@ -9,14 +16,10 @@ node {
           echo 'Hello World'
           sh "df -kh"      
    }
-   
-   stage("TESTPARAMETER") {
-              echo "flag: ${params.userFlag}"
-   }
-   
+    
    stage ('UPDATE ENVIROMENT'){
          sh "sudo mkdir -p ${WORKSPACE}//repo"
-         sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
+         //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
    
    stage ('CHECKOUT PROJECT'){
