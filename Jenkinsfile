@@ -1,8 +1,7 @@
 node {
    echo "Building Job at ${workspace}"
    //Create parameters
-pipeline {
-        parameters {
+   parameters {
             choice(
                 name: 'Nodes',
                 choices:"Linux\nMac",
@@ -16,8 +15,7 @@ pipeline {
                 defaultValue:"/home/pencillr/builds/",
                 description: "Where to put the build!")
     }
-}        
-
+       
    //Escape error job
    stage('Shell') {
         try {
