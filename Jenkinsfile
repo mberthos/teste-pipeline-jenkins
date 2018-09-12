@@ -1,4 +1,6 @@
-//Create parameters
+node {
+   echo "Building Job at ${workspace}"
+   //Create parameters
 pipeline {
         parameters {
             choice(
@@ -14,24 +16,8 @@ pipeline {
                 defaultValue:"/home/pencillr/builds/",
                 description: "Where to put the build!")
     }
-    stages {
-        stage("build") {
-            steps {
-                script {
-                    build(job: "builder-job",
-                        parameters:
-                        [string(name: 'Nodes', value: "${params.Nodes}"),
-                        string(name: 'Versions', value: "${params.Versions}"),
-                        string(name: 'Path', value: "${params.Path}")])
-                }
-            }
-        }
-    }
-}
+}        
 
-node {
-   echo "Building Job at ${workspace}"
-   
    //Escape error job
    stage('Shell') {
         try {
