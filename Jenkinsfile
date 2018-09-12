@@ -8,7 +8,7 @@ node {
    
    stage("TESTPARAMETER") {
        echo "flag: ${params.userFlag}"
-      echo "echo ${params.region}"
+       echo "region: echo ${params.region}"
    }
    
    //Stages
