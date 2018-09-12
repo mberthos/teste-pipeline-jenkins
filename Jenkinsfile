@@ -1,11 +1,25 @@
 node {
-   stage 'CLEAN'
-        echo 'Hello World'
+   stage ('CLEAN'){
+      steps{
+          echo 'Hello World'
+          sh "df -kh"
+      }
+   }
    
-   stage 'CHECKOUT PROJECT'
+   stage ('UPDATE ENVIROMENT'){
+      steps{
+          sh "sudo sh "mkdir -p $WORKSPACE/repo"
+          sh "sudo chmod -R +x $WORKSPACE/repo/*.*"
+          sh "sudo "$WORKSPACE/repo/teste.sh
+         
+      }
+   }
+   
+   
+   stage ('CHECKOUT PROJECT'){
         checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'da5a2d11-fa80-4e5b-8add-a69c704c3b13', url: 'https://github.com/mberthos/teste-pipeline-jenkins.git']]])   
-   
-   timeout(time: 60, unit: 'SECONDS') {
+   }
+      timeout(time: 60, unit: 'SECONDS') {
          withEnv(["BRANCH=${params.BRANCH}"]) {
                stage "CREATE BUILD OUTPUT"
                    sh "echo $BRANCH"
@@ -18,10 +32,13 @@ node {
                    writeFile file: "output/uselessfile.md", text: "This file is useless, no need to archive it."
          }
     }
-    stage "ARCHIVE BUILD OUTPUT"
+   
+   stage ("ARCHIVE BUILD OUTPUT"){
          // Archive the build output artifacts.
          archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'   
-    stage ('CALL JOB'){
+   }
+   
+   stage ('CALL JOB'){
         build 'pipeline-local' 
     }
 }
