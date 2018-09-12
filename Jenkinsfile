@@ -1,9 +1,7 @@
 node {
    stage ('CLEAN'){
-      steps{
           echo 'Hello World'
-          sh "df -kh"
-      }
+          sh "df -kh"      
    }
    
    stage ('UPDATE ENVIROMENT'){
