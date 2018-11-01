@@ -1,5 +1,5 @@
 node {
-   echo "Building Job at ${workspace}"
+   echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
   
    //Escape error job
@@ -25,40 +25,30 @@ node {
    }
    
    //Stages
-   stage ('CLEAN'){
-          echo 'Hello World'
+   stage ('VALIDATE_PARAMETERS'){
+          echo 'VALIDATE CONFIGURATIONS'
           sh "df -kh"      
    }
     
-   stage ('UPDATE ENVIROMENT'){
+   stage ('UPDATE_ENVIROMENT'){
          sh "sudo mkdir -p ${WORKSPACE}//repo"
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
-   
-   stage ('CHECKOUT PROJECT'){
-        checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [[$class: 'PerBuildTag']], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'da5a2d11-fa80-4e5b-8add-a69c704c3b13', url: 'https://github.com/mberthos/teste-pipeline-jenkins.git']]])   
+
+   stage ('CREATE_VM'){
+           //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+           echo "CREATED VM: ${params.vm_name}"
    }
-      timeout(time: 60, unit: 'SECONDS') {
-         withEnv(["BRANCH=${params.BRANCH}"]) {
-               stage "CREATE BUILD OUTPUT"
-                   sh "echo $BRANCH"
-                   // Make the output directory.
-                   sh "mkdir -p output"
-                   sleep 5 
-                   // Write an useful file, which is needed to be archived.
-                   writeFile file: "output/usefulfile.txt", text: "This file is useful, need to archive it."
-                   // Write an useless file, which is not needed to be archived.
-                   writeFile file: "output/uselessfile.md", text: "This file is useless, no need to archive it."
-         }
-    }
-   
-   stage ("ARCHIVE BUILD OUTPUT"){
-         // Archive the build output artifacts.
-         archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'   
+
+   stage ('CALL_CHEF_PROVISION '){
+              //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+              //build 'pipeline-local'
+              echo "Executing role-base "
    }
-   
-   stage ('CALL JOB'){
-        //build(job: 'jenkins-test-project-build', param1 : 'some-value')
-        build 'pipeline-local' 
-    }
+
+   stage ('FINAL_TEST'){
+              //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+              echo "VM Passed and it is dne to delivery ${vm_name}.datac.movile.com"
+      }
+
 }
