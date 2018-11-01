@@ -31,7 +31,7 @@ node {
    }
     
    stage ('UPDATE_ENVIROMENT'){
-         sh "sudo mkdir -p /etc/chef"
+         sh "mkdir -p /etc/chef"
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
 
