@@ -22,20 +22,16 @@ node {
    stage("TESTPARAMETER") {
        echo "flag: ${params.userFlag}"
        echo "region: ${params.region}"
+       sh "df -kh"
    }
    
-   //Stages
-   stage ('VALIDATE_PARAMETERS'){
-          echo 'VALIDATE CONFIGURATIONS'
-          sh "df -kh"      
-   }
-    
+
    stage ('UPDATE_ENVIROMENT'){
          sh "mkdir -p /etc/chef"
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
 
-   stage ('CREATE_VM'){
+   stage ('RUN_SCRIPT_TO_CREATEVM'){
            //build(job: 'jenkins-test-project-build', param1 : 'some-value')
            echo "CREATED VM: ${params.vm_name}"
    }
