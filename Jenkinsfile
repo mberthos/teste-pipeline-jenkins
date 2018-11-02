@@ -45,7 +45,7 @@ node ("${params.xenserver_name}"){
 
    stage ('FINAL_TEST'){
               //build(job: 'jenkins-test-project-build', param1 : 'some-value')
-              echo "VM Passed and it is dne to delivery ${vm_name}.datac.movile.com"
+              echo "VM Passed and it is dne to delivery ${params.VM_name}.datac.movile.com"
       }
 
 }
