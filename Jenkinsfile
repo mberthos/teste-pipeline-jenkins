@@ -1,4 +1,4 @@
-node {
+node ('${params.xenserver_name}'){
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
   
@@ -32,7 +32,7 @@ node {
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
-           sh "/vm-creator.sh cupertino4 ${params.Disk_ID} ${params.Disk_ID} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
+           sh "/tmp/./vm-creator.sh  ${params.VM_Name} ${params.sr_xenserver_uuid}  ${params.Template} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
 
    }
 
