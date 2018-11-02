@@ -31,9 +31,9 @@ node {
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
    }
 
-   stage ('RUN_SCRIPT_CALL_TERRAFORM_TO_CLOUDS'){
-           //build(job: 'jenkins-test-project-build', param1 : 'some-value')
-           echo "CREATED VM: ${params.vm_name} on ${params.cloud}"
+   stage ('RUN_SCRIPT_CREATE_VM'){
+           sh "/vm-creator.sh cupertino4 ${params.Disk_ID} ${params.Disk_ID} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
+
    }
 
    stage ('CALL_CHEF_PROVISION'){
