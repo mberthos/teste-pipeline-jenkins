@@ -1,32 +1,6 @@
 node ("${params.xenserver_name}"){
-   echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
-   //Create parameters
-
-   //Escape error job
-   stage('Shell') {
-        try {
-            sh returnStdout: true, script: 'demo.sh'
-        }
-        catch (exc) {
-            echo 'Something failed!'
-        }
-    }
-   currentBuild.description = "#${BUILD_NUMBER}, ${VM_Name}, ${xenserver_name}, ${IP}"
+   currentBuild.description = "#${BUILD_NUMBER}, ${vm_name}, ${xenserver_name}, ${IP}"
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${IP}"
-
-   //parameters
-   parameters {
-         //booleanParam(defaultValue: true, description: '', name: 'userFlag')
-         string(defaultValue: "TEST", description: 'What environment?', name: 'userFlag')
-         choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
-   }
-
-   stage("TESTPARAMETER") {
-       echo "flag: ${params.userFlag}"
-       echo "region: ${params.region}"
-       sh "df -kh"
-   }
-
 
    stage ('UPDATE_ENVIROMENT'){
          sh "mkdir -p /etc/chef"
@@ -34,8 +8,7 @@ node ("${params.xenserver_name}"){
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
-           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${VM_Name} ${sr_xenserver_uuid}  ${Template} ${Data_Center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
-
+           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${vm_Name} ${sr_xenserver_uuid}  ${template} ${data_center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
    }
 
    stage ('CALL_CHEF_PROVISION'){
@@ -47,6 +20,6 @@ node ("${params.xenserver_name}"){
    stage ('FINAL_TEST'){
               //build(job: 'jenkins-test-project-build', param1 : 'some-value')
               echo "VM Passed and it is dne to delivery"
-      }
+   }
 
 }
