@@ -1,4 +1,4 @@
-node ('${params.xenserver_name}'){
+node ("${params.xenserver_name}"){
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
   
