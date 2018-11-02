@@ -1,7 +1,8 @@
 node ("${params.xenserver_name}"){
+   currentBuild.description = "#${BUILD_NUMBER}, VMNAME ${params.VM_Name}, XENHOST ${params.VM_xenserver_name}"
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
-  
+
    //Escape error job
    stage('Shell') {
         try {
@@ -11,24 +12,24 @@ node ("${params.xenserver_name}"){
             echo 'Something failed!'
         }
     }
-   
+
    //parameters
    parameters {
          //booleanParam(defaultValue: true, description: '', name: 'userFlag')
          string(defaultValue: "TEST", description: 'What environment?', name: 'userFlag')
          choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
    }
-   
+
    stage("TESTPARAMETER") {
        echo "flag: ${params.userFlag}"
        echo "region: ${params.region}"
        sh "df -kh"
    }
-   
+
 
    stage ('UPDATE_ENVIROMENT'){
          sh "mkdir -p /etc/chef"
-         //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"        
+         //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
