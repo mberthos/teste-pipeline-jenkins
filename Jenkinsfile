@@ -28,7 +28,7 @@ node ("${params.xenserver_name}"){
 
 
    stage ('UPDATE_ENVIROMENT'){
-         sh "mkdir -p /etc/chef"${params.VM_xenserver_name}
+         sh "mkdir -p /etc/chef"${params.xenserver_name}
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"
    }
 
