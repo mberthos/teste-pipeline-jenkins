@@ -11,6 +11,8 @@ node ("${params.xenserver_name}"){
             echo 'Something failed!'
         }
     }
+   currentBuild.description = "#${BUILD_NUMBER}, ${VM_Name}, ${xenserver_name}, ${IP}"
+   echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${IP}"
 
    //parameters
    parameters {
@@ -32,7 +34,7 @@ node ("${params.xenserver_name}"){
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
-           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${params.VM_Name} ${params.sr_xenserver_uuid}  ${params.Template} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
+           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${VM_Name} ${sr_xenserver_uuid}  ${Template} ${Data_Center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
 
    }
 
@@ -44,7 +46,7 @@ node ("${params.xenserver_name}"){
 
    stage ('FINAL_TEST'){
               //build(job: 'jenkins-test-project-build', param1 : 'some-value')
-              echo "VM Passed and it is dne to delivery ${vm_name}.datac.movile.com"
+              echo "VM Passed and it is dne to delivery"
       }
 
 }
