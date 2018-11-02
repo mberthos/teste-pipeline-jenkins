@@ -32,7 +32,7 @@ node ("${params.xenserver_name}"){
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
-           sh "/home/marcelo.bertho/./vm-creator.sh  ${params.VM_Name} ${params.sr_xenserver_uuid}  ${params.Template} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
+           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${params.VM_Name} ${params.sr_xenserver_uuid}  ${params.Template} ${params.Data_Center} ${params.IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
 
    }
 
