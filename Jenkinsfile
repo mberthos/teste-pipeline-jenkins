@@ -1,5 +1,5 @@
 node ("${params.xenserver_name}"){
-   currentBuild.description = "#${BUILD_NUMBER}, VMNAME ${params.VM_Name}, XENHOST ${params.VM_xenserver_name}, IP ${params.IP}"
+   currentBuild.description = "#${BUILD_NUMBER}, VMNAME ${params.VM_Name}, XENHOST ${params.xenserver_name}, IP ${params.IP}"
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
 
