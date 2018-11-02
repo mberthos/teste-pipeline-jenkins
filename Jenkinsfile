@@ -1,5 +1,5 @@
 node ("${params.xenserver_name}"){
-   currentBuild.description = "#${BUILD_NUMBER}, VMNAME ${params.VM_Name}, XENHOST ${params.VM_xenserver_name}"
+   currentBuild.description = "#${BUILD_NUMBER}, VMNAME ${params.VM_Name}, XENHOST ${params.VM_xenserver_name}, IP ${params.IP}"
    echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
    //Create parameters
 
@@ -28,7 +28,7 @@ node ("${params.xenserver_name}"){
 
 
    stage ('UPDATE_ENVIROMENT'){
-         sh "mkdir -p /etc/chef"
+         sh "mkdir -p /etc/chef"${params.VM_xenserver_name}
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"
    }
 
