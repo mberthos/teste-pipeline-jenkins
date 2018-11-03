@@ -7,21 +7,6 @@ node ("${params.xenserver_name}"){
          //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"
    }
 
-    stage ('CHECK_IP){
-            sh """
-            function check_ip() {
-                       ping -c 2 $1 >/dev/null
-                       if [ $? -eq 0 ]; then
-                       echo "NOK : IP $1 already in use"
-                       exit 2
-                       else
-                       echo "OK  : IP $1 is available to use"
-                       fi
-                   }
-            """
-
-    }
-
    stage ('RUN_SCRIPT_CREATE_VM'){
            sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${vm_Name} ${sr_xenserver_uuid}  ${template} ${data_center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
    }

@@ -1,94 +1,50 @@
-#!/bin/bash
-# This script will create a virtual machine
+node {
+   echo "Creating a new vm ${vm_name} on ${xenserver_name} with IP ${ip}"
+   //Create parameters
 
-vm_name=$1
-storage=$2
-template=$3
-dc=$4
-ip0=$5
-costcenter=$6
-bootstrap=${7:-true}
-bootstrap_url=${8:-http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh}
-
-    function check_ip() {
-        ping -c 2 $1 >/dev/null
-        if [ $? -eq 0 ]; then
-        echo "NOK : IP $1 already in use"
-        exit 2
-        else
-        echo "OK  : IP $1 is available to use"
-        fi
+   //Escape error job
+   stage('Shell') {
+        try {
+            sh returnStdout: true, script: 'demo.sh'
+        }
+        catch (exc) {
+            echo 'Something failed!'
+        }
     }
 
-    function usage_help() {
-        echo -e "\nUsage  : $0 [vm_name] [storage] [template] [dc] [ip0] [cost_center] (boosttrap) (bootstrap_url)"
-        echo -e "\n[mandatory] (optional)\n"
-        echo -e "\nExample: $0 angola1 396570dc-4a87-c418-0a7e-dd94afb06509 Template_CentOS7 diveo 10.110.8.9 \"Mobile Content\" true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh\n"
-        exit 2
-    }
+   //parameters
+   parameters {
+         //booleanParam(defaultValue: true, description: '', name: 'userFlag')
+         string(defaultValue: "TEST", description: 'What environment?', name: 'userFlag')
+         choice(choices: ['US-EAST-1', 'US-WEST-2'], description: 'What AWS region?', name: 'region')
+   }
 
-    [[ ! -n $vm_name ]] && echo "NOK : You need to specify the name of vm, ex: 'mordor2'" && usage_help
-    [[ ! -n $storage ]] && echo "NOK : You need to specify the UUID of storage, ex: '396570dc-4a87-c418-0a7e-dd94afb06509' (list: # xe sr-list)" && usage_help
-    [[ ! -n $template ]] && echo "NOK : You need to specify the template name, ex: 'Template_CentOS7' (list: # xe template-list | grep name-label)" && usage_help
-    [[ ! -n $dc ]] && echo "NOK : You need to specify the datacenter, ex: 'alog' ou 'diveo'" && usage_help
-    [[ ! -n $ip0 ]] && echo "NOK : You need to specify the IP of eth0, ex: '10.110.8.9'" && usage_help
-    [[ ! -n $costcenter ]] && echo "NOK : You need to specify the cost center, ex: Geral'" && usage_help
-
-    if [ "$dc" == "alog" ]; then
-    netmask0="255.255.248.0"
-    gateway="10.110.0.1"
-    dns="10.110.0.245"
-    elif [ "$dc" == "diveo" ]; then
-    netmask0="255.255.248.0"
-    gateway="10.110.8.1"
-    dns="10.110.8.245"
-    fi
-
-    ds="datac.movile.com"
-    domain="datac.movile.com"
+   stage("TESTPARAMETER") {
+       echo "flag: ${params.userFlag}"
+       echo "region: ${params.region}"
+       sh "df -kh"
+   }
 
 
-    echo "Details $vm_name in $dc with $template:"
-    echo "eth0: $ip0 / $netmask0"
-    echo "dns : $dns / GW $gateway"
+   stage ('UPDATE_ENVIROMENT'){
+         sh "mkdir -p /etc/chef"
+         //sh "sudo chmod -R +x ${WORKSPACE}//repo//*.*"
+   }
 
-    check_ip $ip0
+   stage ('RUN_SCRIPT_CALL_TERRAFORM_TO_CLOUDS'){
+           //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+           echo "CREATED VM: ${params.vm_name} on ${params.cloud}"
+   }
 
-    if [ $UID != "0" ]; then
-    echo "NOK : You need to be root to create new machine"
-    exit 1
-    fi
+   stage ('CALL_CHEF_PROVISION'){
+              //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+              //build 'pipeline-local'
+              echo "Executing role-base "
+   }
 
-    # Check template
-    template_desired=$(xe template-list name-label=$template params=name-label --minimal)
-    if [ $template_desired != $template ]; then
-    echo "NOK: Template name '$template' does not exist, check with '# xe template-list'"
-    exit 1
-    fi
+   stage ('FINAL_TEST'){
+              //build(job: 'jenkins-test-project-build', param1 : 'some-value')
+              echo "VM Passed and it is dne to delivery ${vm_name}.datac.movile.com"
+      }
 
-    echo "Creating ..."
-    vm_uuid=$(xe vm-install template=${template}  new-name-label=$vm_name sr-uuid=$storage)
-
-    xe vm-param-clear uuid=$vm_uuid param-name=xenstore-data
-
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/ip0=$ip0
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/netmask0=$netmask0
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/gateway=$gateway
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/dns=$dns
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/ds=$ds
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/domain=$domain
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/name=$vm_name
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/bootstrap=$bootstrap
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/bootstrap_url=$bootstrap_url
-    xe vm-param-add uuid=$vm_uuid param-name=xenstore-data vm-data/costcenter="$costcenter"
-
-    vdi_id=$(xe vbd-list vm-uuid=$vm_uuid type=Disk params=vdi-uuid  --minimal)
-    xe vdi-param-set uuid=$vdi_id name-label=$vm_name
-
-    xe vm-memory-limits-set uuid=$vm_uuid static-min=4GiB dynamic-min=4GiB dynamic-max=4GiB static-max=4GiB
-
-    xe vm-start uuid=$vm_uuid
-
-    while false; do ping -c 1 $ip0 > /dev/null; sleep 3; done
-
-    echo "OK  : $vm_name was created and responsive by $ip0"
+}
