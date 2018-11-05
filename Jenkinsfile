@@ -8,7 +8,7 @@ node ("${params.xenserver_name}"){
    }
 
    stage ('RUN_SCRIPT_CREATE_VM'){
-           sh "sudo /home/marcelo.bertho/./vm-creator.sh  ${vm_Name} ${sr_xenserver_uuid}  ${template} ${data_center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
+           sh "sudo /home/jenkins/./vm-creator.sh  ${vm_Name} ${sr_xenserver_uuid}  ${template} ${data_center} ${IP} wavy true http://mirror-diveo.datac.movile.com/kumo/movile-user-data.sh"
    }
 
    stage ('CALL_CHEF_PROVISION'){
